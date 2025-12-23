@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PS_Test.Server.Data.Entities;
+using PS_Test.Server.Interfaces;
 
 namespace PS_Test.Server.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         public DbSet<CustomerEntity> Customers { get; set; }
 
@@ -40,7 +41,16 @@ namespace PS_Test.Server.Data
                 .Property(x => x.Id)
                 .HasDefaultValueSql("gen_random_uuid()");
 
+            modelBuilder.Entity<ProductEntity>()
+                .HasIndex(x => x.Code)
+                .IsUnique();
+
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override int SaveChanges()
+        {
+            return base.SaveChanges();
         }
     }
 }
