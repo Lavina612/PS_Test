@@ -16,16 +16,16 @@ namespace PS_Test.Server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var products = _productService.GetAll();
+            var products = await _productService.GetAll();
             return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var product = _productService.GetById(id);
+            var product = await _productService.GetById(id);
 
             return product == null 
                 ? NotFound() 
@@ -33,9 +33,9 @@ namespace PS_Test.Server.Controllers
         }
 
         [HttpGet("find")]
-        public IActionResult GetByCode([FromQuery] string code)
+        public async Task<IActionResult> GetByCode([FromQuery] string code)
         {
-            var product = _productService.GetByCode(code);
+            var product = await _productService.GetByCode(code);
 
             return product == null
                 ? NotFound()
@@ -43,9 +43,9 @@ namespace PS_Test.Server.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add([FromBody] ProductModel product)
+        public async Task<IActionResult> Add([FromBody] ProductModel product)
         {
-            var addedProduct = _productService.Add(product);
+            var addedProduct = await _productService.Add(product);
 
             return addedProduct == null
                 ? BadRequest()
@@ -53,20 +53,20 @@ namespace PS_Test.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(Guid id, [FromBody] ProductModel updatingProduct)
+        public async Task<IActionResult> Update(Guid id, [FromBody] ProductModel updatingProduct)
         {
             if (id != updatingProduct.Id)
                 return BadRequest("Id in URL and Id in request body must be equal.");
 
-            return _productService.Update(updatingProduct)
+            return await _productService.Update(updatingProduct)
                 ? Ok()
                 : BadRequest();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            _productService.Delete(id);
+            await _productService.Delete(id);
             return NoContent();
         }
     }

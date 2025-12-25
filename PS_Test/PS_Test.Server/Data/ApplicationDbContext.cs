@@ -48,9 +48,9 @@ namespace PS_Test.Server.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public override int SaveChanges()
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return base.SaveChanges();
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

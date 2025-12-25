@@ -16,55 +16,55 @@ namespace PS_Test.Server.Services
             _productRepository = productRepository;
         }
 
-        public IEnumerable<ProductModel> GetAll()
+        public async Task<IEnumerable<ProductModel>> GetAll()
         {
-            var productEntities = _productRepository.GetAll();
+            var productEntities = await _productRepository.GetAll();
             return productEntities.Select(x => x.ToProductModel());
         }
 
-        public ProductModel? GetById(Guid id)
+        public async Task<ProductModel?> GetById(Guid id)
         {
-            var productEntity = _productRepository.GetById(id);
+            var productEntity = await _productRepository.GetById(id);
             return productEntity?.ToProductModel();
         }
 
-        public ProductModel? GetByCode(string code)
+        public async Task<ProductModel?> GetByCode(string code)
         {
-            var productEntity = _productRepository.GetByCode(code);
+            var productEntity = await _productRepository.GetByCode(code);
             return productEntity?.ToProductModel();
         }
 
-        public ProductModel? Add(ProductModel addingProduct)
+        public async Task<ProductModel?> Add(ProductModel addingProduct)
         {
-            if (!CheckValidity(addingProduct) || !CheckCodeUnique(addingProduct))
+            if (!CheckValidity(addingProduct) || !(await CheckCodeUnique(addingProduct)))
             {
                 return null;
             }
 
             var addingEntity = addingProduct.ToProductEntity();
-            _productRepository.Add(addingEntity);
+            await _productRepository.Add(addingEntity);
             return addingEntity.ToProductModel();
         }
 
-        public bool Update(ProductModel updatingProduct)
+        public async Task<bool> Update(ProductModel updatingProduct)
         {
-            if (!CheckValidity(updatingProduct) || !CheckCodeUnique(updatingProduct))
+            if (!CheckValidity(updatingProduct) || !(await CheckCodeUnique(updatingProduct)))
             {
                 return false;
             }
 
             var updatingEntity = updatingProduct.ToProductEntity();
-            _productRepository.Update(updatingEntity);
+            await _productRepository.Update(updatingEntity);
             return true;
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            var productEntity = _productRepository.GetById(id);
+            var productEntity = await _productRepository.GetById(id);
 
             if (productEntity != null)
             {
-                _productRepository.Delete(productEntity);
+                await _productRepository.Delete(productEntity);
             }
         }
 
@@ -76,9 +76,9 @@ namespace PS_Test.Server.Services
                 && product.Price >= 0;
         }
 
-        private bool CheckCodeUnique(ProductModel product)
+        private async Task<bool> CheckCodeUnique(ProductModel product)
         {
-            var productWithSameCode = _productRepository.GetByCode(product.Code);
+            var productWithSameCode = await _productRepository.GetByCode(product.Code);
             return productWithSameCode == null || productWithSameCode.Id == product.Id;
         }
     }

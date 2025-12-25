@@ -13,6 +13,6 @@ namespace PS_Test.Server.Interfaces
 
         public DbSet<ProductEntity> Products { get; set; }
 
-        public int SaveChanges();
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -13,42 +13,42 @@ namespace PS_Test.Server.Repositories
             _context = context;
         }
 
-        public IEnumerable<ProductEntity> GetAll()
+        public async Task<List<ProductEntity>> GetAll()
         {
-            return _context.Products;
+            return await _context.Products.ToListAsync();
         }
 
-        public ProductEntity? GetById(Guid id)
+        public async Task<ProductEntity?> GetById(Guid id)
         {
-            return _context.Products
+            return await _context.Products
                 .Include(x => x.Items)
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public ProductEntity? GetByCode(string code)
+        public async Task<ProductEntity?> GetByCode(string code)
         {
-            return _context.Products
+            return await _context.Products
                 .Include(x => x.Items)
                 .AsNoTracking()
-                .FirstOrDefault(x => x.Code == code);
+                .FirstOrDefaultAsync(x => x.Code == code);
         }
 
-        public void Add(ProductEntity product)
+        public async Task Add(ProductEntity product)
         {
             _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(ProductEntity product)
+        public async Task Update(ProductEntity product)
         {
             _context.Products.Update(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(ProductEntity product)
+        public async Task Delete(ProductEntity product)
         {
             _context.Products.Remove(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

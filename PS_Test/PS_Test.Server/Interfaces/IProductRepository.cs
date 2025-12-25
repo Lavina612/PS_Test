@@ -4,16 +4,16 @@ namespace PS_Test.Server.Interfaces
 {
     public interface IProductRepository
     {
-        public IEnumerable<ProductEntity> GetAll();
+        public Task<List<ProductEntity>> GetAll();
 
-        public ProductEntity? GetById(Guid id);
+        public Task<ProductEntity?> GetById(Guid id);
 
-        public ProductEntity? GetByCode(string code);
+        public Task<ProductEntity?> GetByCode(string code);
 
-        public void Add(ProductEntity addingProduct);
+        public Task Add(ProductEntity addingProduct);
 
-        public void Update(ProductEntity updatingProduct);
+        public Task Update(ProductEntity updatingProduct);
 
-        public void Delete(ProductEntity product);
+        public Task Delete(ProductEntity product);
     }
 }
